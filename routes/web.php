@@ -1,7 +1,9 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PessoaController;
+use App\Models\Pessoa;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/crudpessoa_create',function() {
-    return view('crudpessoa_create');
+Route::get('/cadastrar', function () {
+    return view('cadastrar');
 });
+
+Route::post('/cadastro-pessoas', [PessoaController::class, 'store']);
+
+Route::get('/listar', [PessoaController::class, 'listarpessoas']);
+
+Route::get('/editar/{id}',function($id){
+
+    $pessoa = Pessoa::find($id);
+    return view('editar', ['pessoa' => $pessoa]);
+});
+
+Route::post('/editar-pessoa/{id}',[PessoaController::class, 'update']);
+
+Route::get('/excluir/{id}',function($id){
+    //dd($request->all());
+
+    $pessoa = Pessoa::find($id);
+    $pessoa->delete();
+
+    echo '<alert>Cadastro excluido com sucesso!</alert>';
+    echo '<br><br><a href="/listar">Voltar à Listagem</a>';
+    echo '<br><br><a href="/">Voltar ao início</a>';
+});
+
+
+
+
